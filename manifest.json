@@ -1,0 +1,15 @@
+{
+   "description": "Showroom フォローしてるライブ自動オープン。",
+   "manifest_version": 3,
+   "name": "SHOWROOM 人間をやめるぜ！！",
+   "permissions": [ "storage", "notifications", "alarms", "tabs", "background" ],
+   "short_name": "すこぷら",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.0.0",
+   "background": {
+      "service_worker": "background.js"
+   },
+   "host_permissions": [
+    "https://www.showroom-live.com/"
+   ]
+}
