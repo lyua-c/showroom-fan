@@ -18,6 +18,9 @@ Get_follow_onlives = function () {
           console.log(onlives.rooms[i].room_name ,":" , onlives.rooms[i].room_url_key);
           followopen("https://www.showroom-live.com/r/" + onlives.rooms[i].room_url_key);
         }
+        if (onlives.rooms.length === 0) {
+         live_tab_remove();
+        }
       });
       
 }
@@ -47,6 +50,19 @@ chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
      chrome.tabs.remove(tabId, null);
   }
 });
+
+live_tab_remove = function () {
+	chrome.tabs.query({windowType:'normal'}, function(tabs) {
+      if (tabs.length == 0) {return;}
+
+      for (var i = 0, tab; tab = tabs[i]; i++) {
+        if (tab.url && (tab.url.indexOf("https://www.showroom-live.com/r/") == 0)) {
+         chrome.tabs.remove(tabs[i].id, null);
+         return;
+        }
+      }
+    });
+}
 
 followopen = function (open_url) {
     chrome.tabs.query({windowType:'normal'}, function(tabs) {
