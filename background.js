@@ -73,6 +73,7 @@ followopen = function (open_url) {
 
 
         if (tab.url && tab.url == open_url) {
+          chrome.tabs.update( tab.id, {selected:true}, function(tab){});
           return;
         }
       }
