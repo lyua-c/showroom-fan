@@ -16,40 +16,12 @@ Get_follow_onlives = function () {
         onlives = data;
         for (var i = 0, len = onlives.rooms.length; i < len; i++) {
           console.log(onlives.rooms[i].room_name ,":" , onlives.rooms[i].room_url_key);
-          followopen("https://www.showroom-live.com/r/" + onlives.rooms[i].room_url_key);
+          followopen("https://www.showroom-live.com/r/" + onlives.rooms[i].room_url_key,i);
         }
-        if (onlives.rooms.length === 0) {
          live_tab_remove();
-        }
       });
       
 }
-
-let tabUpdated = false;
-chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
-  if (info.status === 'complete') {
-  	if (!tabUpdated) {
-  	    Main();
-  	    tabUpdated = true;
-  	}
-    // console.log("close_nofollow_onlives");
-  	// console.log(tab.url);
-  	if (tab.url && (tab.url.indexOf("https://www.showroom-live.com/r/") < 0)) {
-     // console.log("ショールームではない");
-     return;
-    }
-    // console.log("close_nofollow_onlives");
-    // console.log(onlives);
-        for (var i = 0, len = onlives.rooms.length; i < len; i++) {
-         if (tab.url === "https://www.showroom-live.com/r/" + onlives.rooms[i].room_url_key) {
-         	 // console.log(onlives.rooms[i].room_name + "はフォローしているルームなので見逃す");
-         	 return;
-         }
-        }
-     // フォローしていないルームは閉じる
-     chrome.tabs.remove(tabId, null);
-  }
-});
 
 live_tab_remove = function () {
 	chrome.tabs.query({windowType:'normal'}, function(tabs) {
@@ -57,14 +29,19 @@ live_tab_remove = function () {
 
       for (var i = 0, tab; tab = tabs[i]; i++) {
         if (tab.url && (tab.url.indexOf("https://www.showroom-live.com/r/") == 0)) {
-         chrome.tabs.remove(tabs[i].id, null);
-         return;
+        	var remove = true;
+        	for (var j = 0, len = onlives.rooms.length; j < len; j++) {
+        	 if (tab.url.indexOf("https://www.showroom-live.com/r/" + onlives.rooms[j].room_url_key) == 0) {
+        	  remove = false;
+        	 }
+        	}
+        if (remove) {chrome.tabs.remove(tabs[i].id, null);}
         }
       }
     });
 }
 
-followopen = function (open_url) {
+followopen = function (open_url,num) {
     chrome.tabs.query({windowType:'normal'}, function(tabs) {
       if (tabs.length == 0) {return;}
 
@@ -89,7 +66,7 @@ followopen = function (open_url) {
 
 
         if (tab.url && tab.url == open_url) {
-          chrome.tabs.update( tab.id, {selected:true}, function(tab){});
+          setTimeout(() => {chrome.tabs.update( tab.id, {selected:true}, function(tab){});}, 1000 * num);
           return;
         }
       }
