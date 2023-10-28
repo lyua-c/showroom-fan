@@ -66,7 +66,7 @@ followopen = function (open_url,num) {
 
 
         if (tab.url && tab.url == open_url) {
-          setTimeout(() => {chrome.tabs.update( tab.id, {selected:true}, function(tab){});}, 1000 * num);
+          setTimeout(() => {chrome.tabs.update( tab.id, {selected:true}, function(tab){});}, 4000 * num);
           return;
         }
       }
