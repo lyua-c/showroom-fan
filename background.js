@@ -1,7 +1,7 @@
 onlives = {};
 
 Main = function () {
- console.log("【バックグラウンドです。】", new Date);
+ //console.log("【バックグラウンドです。】", new Date);
  Get_follow_onlives();
  tabUpdated = false;
  //chrome.tabs.create({ "url": "https://www.showroom-live.com/" });
@@ -77,12 +77,12 @@ followopen = function (open_url,num) {
 
 Main();
 
-// 1分毎実行
-chrome.alarms.create("start_count_1", { "periodInMinutes": 1 });
+// 30秒毎実行
+chrome.alarms.create("Check_Onlives", { "periodInMinutes": 0.5 });
 
 // alarmsイベント取得
 chrome.alarms.onAlarm.addListener(function (alarm) {
-    if (alarm.name == "start_count_1") {
+    if (alarm.name == "Check_Onlives") {
         Main();
     }
 });
